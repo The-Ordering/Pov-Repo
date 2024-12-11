@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:ordering/cotroller/product_controller.dart';
+import 'package:ordering/view/detailscreen.dart';
 import 'package:ordering/view/widget/input.dart';
 import 'package:ordering/view/widget/label.dart';
+import 'package:ordering/view/widget/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +17,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final textCtrl = TextEditingController();
   void Function()? onTap;
   void Function(String)? onSubmitted;
+
+  final controller = ProductController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,45 +34,50 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 24),
+              const Gap(24),
               const Label(
                 text: 'Welcome to the Ordering!',
-                fontFamily: Onest.black,
+                fontFamily: Onest.semibold,
                 fontSize: 16,
               ),
               const Label(
                 text: 'Now order what you want by yourself',
               ),
-              const SizedBox(height: 16),
+              const Gap(16),
               const Label(
                 text: 'Find what you want',
                 fontFamily: Onest.leght,
-                fontSize: 14,
+                fontSize: 13,
               ),
-              const SizedBox(height: 4),
+              const Gap(4),
               InputText(controller: textCtrl),
-              const SizedBox(height: 16),
+              const Gap(32),
               const Label(
-                text: 'All Product',
+                text: 'All Products',
                 fontFamily: Onest.leght,
-                fontSize: 16,
+                fontSize: 13,
               ),
-              const SizedBox(height: 15),
+              const Gap(16),
               GridView.builder(
-                itemCount: 20,
+                itemCount: controller.products.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisExtent: 200,
-                  mainAxisSpacing: 8,
+                  mainAxisExtent: 260,
+                  mainAxisSpacing: 32,
+                  crossAxisSpacing: 24,
                 ),
-                itemBuilder: (context, index) {
-                  return Container(
-                    color: Colors.amber,
-                  );
-                },
+                itemBuilder: (context, index) => ProductCard(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                        Detailscreen(product: controller.products[index]),
+                    ),
+                  ),
+                  product: controller.products[index],
+                ),
               ),
             ],
           ),
